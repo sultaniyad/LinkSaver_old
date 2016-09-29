@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.iyad.sultan.linksaver.MainActivity;
 import com.iyad.sultan.linksaver.R;
+
+import io.realm.Realm;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +21,7 @@ import com.iyad.sultan.linksaver.R;
  * Use the {@link DetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DetailsFragment extends Fragment {
+public class DetailsFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -91,6 +94,8 @@ public class DetailsFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this

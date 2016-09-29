@@ -1,18 +1,27 @@
 package com.iyad.sultan.linksaver.Fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.iyad.sultan.linksaver.Controller.RecyclerViewAdapter;
+import com.iyad.sultan.linksaver.MainActivity;
 import com.iyad.sultan.linksaver.Models.Link;
 import com.iyad.sultan.linksaver.R;
 
@@ -30,14 +39,16 @@ import io.realm.RealmResults;
  * Use the {@link LinkFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LinkFragment extends Fragment {
-
-    private RecyclerView rec ;
+public class LinkFragment extends Fragment implements RecyclerViewAdapter.AdapterInterface {
+    private Paint p = new Paint();
+    private RecyclerView rec;
     private Realm realm;
     private RealmQuery<Link> query;
     private RealmResults<Link> result;
-    private RealmAsyncTask  realmAsyncTask;
+    private RealmAsyncTask realmAsyncTask;
+    private RecyclerViewAdapter adapter;
 
+    private  Link link;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -84,24 +95,26 @@ public class LinkFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v =inflater.inflate(R.layout.fragment_link, container, false);
-        rec  = (RecyclerView) v.findViewById(R.id.root_recyclerview);
+        View v = inflater.inflate(R.layout.fragment_link, container, false);
+        rec = (RecyclerView) v.findViewById(R.id.root_recyclerview);
 
         realm = Realm.getDefaultInstance();
         query = realm.where(Link.class);
         result = query.findAll();
 
-
-        rec.setAdapter(new RecyclerViewAdapter(result));
+        adapter = new RecyclerViewAdapter(result);
+        adapter.setAdapterListener(this);
+        rec.setAdapter(adapter);
         rec.setItemAnimator(new DefaultItemAnimator());
         rec.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(String str) {
+    public void onButtonPressed(Link link) {
         if (mListener != null) {
-            mListener.onLinkFragmentInteraction(str);
+            mListener.onLinkFragmentInteraction(link);
         }
     }
 
@@ -120,6 +133,20 @@ public class LinkFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (realm != null) realm.close();
+    }
+
+    @Override
+    public void getPosition(int posistion) {
+        link = result.get(posistion);
+        mListener.onLinkFragmentInteraction(link);
+
     }
 
     /**
@@ -134,6 +161,9 @@ public class LinkFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onLinkFragmentInteraction(String srt);
+        void onLinkFragmentInteraction(Link link);
+
     }
+
+
 }

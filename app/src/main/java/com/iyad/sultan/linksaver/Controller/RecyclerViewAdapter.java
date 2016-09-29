@@ -14,6 +14,7 @@ import com.iyad.sultan.linksaver.R;
 
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
@@ -23,11 +24,14 @@ import io.realm.RealmResults;
 //Adapter RecyclerView
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
-
+    Realm realm ;
+    private  List<Link> items;
     private List<Link> linkList ;
-
+ private  AdapterInterface callBackListner;
     public RecyclerViewAdapter(RealmResults<Link> list){
          linkList = list;
+        realm = Realm.getDefaultInstance();
+
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,11 +40,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new ViewHolder(v);
     }
 
+
+    public void setAdapterListener(final AdapterInterface call){
+           this.callBackListner = call;
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
          final Link link  = linkList.get(position);
         holder.Title.setText(link.getTitle());
-        holder.openLinkImg.setImageResource(R.drawable.ic_open_in_browser_black_24dp);
+        //if Fav do this
+        holder.openLinkImg.setImageResource(R.drawable.omportant_link_no);
         holder.isImportantImg.setImageResource(R.drawable.ic_open_in_browser_black_24dp);
 
 
@@ -69,12 +79,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
 
+
         }
 
         @Override
         public void onClick(View v) {
-            Log.i("rrr","Done Clicking");
+           callBackListner.getPosition(getAdapterPosition());
         }
     }
+
+    //Interface
+    public interface AdapterInterface{
+         void getPosition(int position);
+    }
+
+
+
+
+
 }
 
