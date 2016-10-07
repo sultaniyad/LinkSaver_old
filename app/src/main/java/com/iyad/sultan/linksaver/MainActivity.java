@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -102,9 +103,12 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
         //Start new Fragment with data
         Link l = link;
         Toast.makeText(this, "Link: " + l.getLink() + " title " + l.getTitle() + " isImpotant "+ l.isImportant(), Toast.LENGTH_SHORT).show();
-        DetailsFragment fr = (DetailsFragment) getSupportFragmentManager().findFragmentById(R.id.destilsF);
+        DetailsFragment fr = new DetailsFragment();
 
-        fr.showM("sultan is here");
+
+
+
+
     }
 
     
