@@ -4,9 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.iyad.sultan.linksaver.R;
 
@@ -105,5 +107,9 @@ public class ImportnatLinksFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onImportnatLinksFragmentInteraction(String uri);
+    }
+    public void showM(String str){
+
+        Toast.makeText(getActivity().getApplicationContext(), str, Toast.LENGTH_SHORT).show();
     }
 }

@@ -24,15 +24,18 @@ import io.realm.RealmResults;
 //Adapter RecyclerView
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
-    Realm realm ;
-    private  List<Link> items;
+
+
     private List<Link> linkList ;
- private  AdapterInterface callBackListner;
+    private  AdapterInterface callBackListner;
+
     public RecyclerViewAdapter(RealmResults<Link> list){
          linkList = list;
-        realm = Realm.getDefaultInstance();
+
 
     }
+
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -92,6 +95,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public interface AdapterInterface{
          void getPosition(int position);
     }
+
+
 
 
 

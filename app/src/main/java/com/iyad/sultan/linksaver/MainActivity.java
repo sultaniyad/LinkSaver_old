@@ -29,13 +29,14 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 
 public class MainActivity extends AppCompatActivity implements LinkFragment.OnFragmentInteractionListener, ImportnatLinksFragment.OnFragmentInteractionListener, DetailsFragment.OnFragmentInteractionListener {
-    Realm realmDB;
+
     RealmAsyncTask realmAsyncTask;
 
     private Toolbar toolbar;
@@ -44,10 +45,13 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
     private RecyclerViewAdapter adapter ;
     //Interface Var
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
 
 /*
@@ -76,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adpater = new ViewPagerAdapter(getSupportFragmentManager());
-        adpater.addFragment(new LinkFragment(), "LInks");
-        adpater.addFragment(new ImportnatLinksFragment(), "Important LInks");
+        adpater.addFragment(new LinkFragment(), "Links");
+        adpater.addFragment(new ImportnatLinksFragment(), "Important Links");
         viewPager.setAdapter(adpater);
     }
 
@@ -95,8 +99,12 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
 
     @Override
     public void onLinkFragmentInteraction(final Link link) {
+        //Start new Fragment with data
         Link l = link;
         Toast.makeText(this, "Link: " + l.getLink() + " title " + l.getTitle() + " isImpotant "+ l.isImportant(), Toast.LENGTH_SHORT).show();
+        DetailsFragment fr = (DetailsFragment) getSupportFragmentManager().findFragmentById(R.id.destilsF);
+
+        fr.showM("sultan is here");
     }
 
     
@@ -152,10 +160,7 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
     protected void onDestroy() {
         super.onDestroy();
 
-        if (realmDB != null) {
-            realmDB.close();
-            realmDB = null;
-        }
+
     }
 
     @Override
@@ -167,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
 
                 return false;
             }
@@ -201,4 +207,16 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
 
         }
     }
+
+
+
+    //Interface MainActivity and LinkFragment
+
+
+
+
+
+
+
 }
+

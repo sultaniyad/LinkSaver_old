@@ -25,6 +25,8 @@ import com.iyad.sultan.linksaver.MainActivity;
 import com.iyad.sultan.linksaver.Models.Link;
 import com.iyad.sultan.linksaver.R;
 
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 import io.realm.RealmQuery;
@@ -39,14 +41,19 @@ import io.realm.RealmResults;
  * Use the {@link LinkFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LinkFragment extends Fragment implements RecyclerViewAdapter.AdapterInterface {
-    private Paint p = new Paint();
+public class LinkFragment extends Fragment implements RecyclerViewAdapter.AdapterInterface{
+
     private RecyclerView rec;
     private Realm realm;
     private RealmQuery<Link> query;
+
     private RealmResults<Link> result;
+
     private RealmAsyncTask realmAsyncTask;
     private RecyclerViewAdapter adapter;
+
+    //
+
 
     private  Link link;
     // TODO: Rename parameter arguments, choose names that match
@@ -111,6 +118,8 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
         return v;
     }
 
+
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Link link) {
         if (mListener != null) {
@@ -127,12 +136,15 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
 
     }
 
@@ -144,10 +156,13 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
 
     @Override
     public void getPosition(int posistion) {
-        link = result.get(posistion);
-        mListener.onLinkFragmentInteraction(link);
+         link = result.get(posistion);
+         mListener.onLinkFragmentInteraction(link);
 
     }
+
+
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -163,7 +178,10 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
         // TODO: Update argument type and name
         void onLinkFragmentInteraction(Link link);
 
+
     }
+
+
 
 
 }

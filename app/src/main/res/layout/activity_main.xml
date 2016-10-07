@@ -29,4 +29,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="com.iyad.sultan.linksaver.Fragments.DetailsFragment"
+        android:id="@+id/destilsF"/>
 </android.support.design.widget.CoordinatorLayout>
