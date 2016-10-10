@@ -64,6 +64,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return linkList.size();
     }
 
+
+
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public View cardView  ;

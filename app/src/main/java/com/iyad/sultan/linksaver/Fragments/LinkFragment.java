@@ -182,6 +182,10 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
     }
 
 
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(adapter != null)
+            adapter.notifyDataSetChanged();
+    }
 }

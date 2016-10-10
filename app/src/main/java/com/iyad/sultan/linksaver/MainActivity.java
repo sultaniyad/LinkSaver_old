@@ -1,6 +1,7 @@
 package com.iyad.sultan.linksaver;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -20,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.iyad.sultan.linksaver.Controller.RecyclerViewAdapter;
-import com.iyad.sultan.linksaver.Fragments.DetailsFragment;
 import com.iyad.sultan.linksaver.Fragments.ImportnatLinksFragment;
 import com.iyad.sultan.linksaver.Fragments.LinkFragment;
 import com.iyad.sultan.linksaver.Models.Link;
@@ -36,10 +36,12 @@ import io.realm.RealmResults;
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
 
-public class MainActivity extends AppCompatActivity implements LinkFragment.OnFragmentInteractionListener, ImportnatLinksFragment.OnFragmentInteractionListener, DetailsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements LinkFragment.OnFragmentInteractionListener, ImportnatLinksFragment.OnFragmentInteractionListener{
 
     RealmAsyncTask realmAsyncTask;
+    //
 
+    //
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -88,10 +90,7 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
 
 
     //Interfaces Fragments
-    @Override
-    public void onDetailsFragmentInteraction(String uri) {
 
-    }
 
     @Override
     public void onImportnatLinksFragmentInteraction(String uri) {
@@ -103,7 +102,10 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
         //Start new Fragment with data
         Link l = link;
         Toast.makeText(this, "Link: " + l.getLink() + " title " + l.getTitle() + " isImpotant "+ l.isImportant(), Toast.LENGTH_SHORT).show();
-        DetailsFragment fr = new DetailsFragment();
+
+
+
+
 
 
 
@@ -111,18 +113,18 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
 
     }
 
-    
-
-
     //Adapter Fragment
     class ViewPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
 
+
         public ViewPagerAdapter(FragmentManager fm) {
             super(fm);
         }
+
+
 
         @Override
         public Fragment getItem(int position) {
@@ -143,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+
+
     }
 
 
@@ -196,6 +200,9 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
             case R.id.action_add:
                 // User chose the "Settings" item, show the app settings UI...
                 Toast.makeText(this, "Add Link", Toast.LENGTH_SHORT).show();
+
+                startActivity(new Intent(getApplicationContext(),AddNewLink.class));
+
                 return true;
 
 
