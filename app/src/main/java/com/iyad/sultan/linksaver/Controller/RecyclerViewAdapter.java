@@ -15,6 +15,7 @@ import com.iyad.sultan.linksaver.R;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
@@ -23,10 +24,10 @@ import io.realm.RealmResults;
 
 //Adapter RecyclerView
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>  {
 
 
-    private List<Link> linkList ;
+    private RealmResults<Link> linkList ;
     private  AdapterInterface callBackListner;
 
     public RecyclerViewAdapter(RealmResults<Link> list){
@@ -50,11 +51,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-         final Link link  = linkList.get(position);
+        final Link link  = linkList.get(position);
         holder.Title.setText(link.getTitle());
         //if Fav do this
-        holder.openLinkImg.setImageResource(R.drawable.omportant_link_no);
-        holder.isImportantImg.setImageResource(R.drawable.ic_open_in_browser_black_24dp);
+        holder.openLinkImg.setImageResource(R.drawable.ic_open_in_browser_black_24dp);
+        holder.isImportantImg.setImageResource(R.drawable.important_link_yes);
 
 
     }
@@ -66,7 +67,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
 
         public View cardView  ;
         public ImageView openLinkImg;
@@ -80,22 +82,34 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             openLinkImg = (ImageView) itemView.findViewById(R.id.open_link_img);
             isImportantImg = (ImageView) itemView.findViewById(R.id.is_important_img);
             Title = (TextView) itemView.findViewById(R.id.title);
-            cardView.setOnClickListener(this);
-
-
-
+         /*long Press To delete*/   cardView.setOnLongClickListener(this);
+            isImportantImg.setOnClickListener(this);
+            openLinkImg.setOnClickListener(this);
 
         }
 
         @Override
         public void onClick(View v) {
-           callBackListner.getPosition(getAdapterPosition());
+           switch (v.getId()){
+               case R.id.is_important_img:  callBackListner.getSelectedItem(v.getId(),getAdapterPosition());return;
+               case R.id.open_link_img:callBackListner.getSelectedItem(v.getId(),getAdapterPosition());return;
+               default:return;
+        }}
+
+
+        @Override
+        public boolean onLongClick(View v) {
+            callBackListner.deleteInterface(getAdapterPosition());
+            return true;
         }
     }
 
     //Interface
     public interface AdapterInterface{
-         void getPosition(int position);
+
+         void getSelectedItem(int id,int position);
+         void deleteInterface(int position);
+
     }
 
 

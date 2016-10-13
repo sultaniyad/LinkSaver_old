@@ -1,37 +1,26 @@
 package com.iyad.sultan.linksaver.Fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.iyad.sultan.linksaver.Controller.RecyclerViewAdapter;
-import com.iyad.sultan.linksaver.MainActivity;
 import com.iyad.sultan.linksaver.Models.Link;
 import com.iyad.sultan.linksaver.R;
 
-import java.util.List;
-
 import io.realm.Realm;
 import io.realm.RealmAsyncTask;
+import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import io.realm.RealmResults;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +30,8 @@ import io.realm.RealmResults;
  * Use the {@link LinkFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LinkFragment extends Fragment implements RecyclerViewAdapter.AdapterInterface{
+public class LinkFragment extends Fragment implements RecyclerViewAdapter.AdapterInterface ,RealmChangeListener{
+
 
     private RecyclerView rec;
     private Realm realm;
@@ -55,7 +45,7 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
     //
 
 
-    private  Link link;
+    private Link link;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -108,7 +98,7 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
         realm = Realm.getDefaultInstance();
         query = realm.where(Link.class);
         result = query.findAll();
-
+        result.addChangeListener(this);
         adapter = new RecyclerViewAdapter(result);
         adapter.setAdapterListener(this);
         rec.setAdapter(adapter);
@@ -117,7 +107,6 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
 
         return v;
     }
-
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -151,17 +140,26 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (realm != null) realm.close();
+        if (realm != null) {
+            realm.close();
+            realm = null;
+        }  }
+
+
+    @Override
+    public void getSelectedItem(int id, int position) {
+        mListener.getSelectedItem(id, position);
     }
 
     @Override
-    public void getPosition(int posistion) {
-         link = result.get(posistion);
-         mListener.onLinkFragmentInteraction(link);
-
+    public void deleteInterface(int position) {
+        deleteLink(position);
     }
 
-
+    @Override
+    public void onChange(Object element) {
+        Toast.makeText(getActivity().getApplicationContext(), "on change called " , Toast.LENGTH_SHORT).show();
+    }
 
 
     /**
@@ -178,14 +176,29 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
         // TODO: Update argument type and name
         void onLinkFragmentInteraction(Link link);
 
+        void getSelectedItem(int item, int position);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        realm.removeAllChangeListeners();
+        adapter.notifyDataSetChanged();
+        Toast.makeText(getActivity().getApplicationContext(), "remove :Listner", Toast.LENGTH_SHORT).show();
 
     }
 
+    void deleteLink(final int position) {
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(adapter != null)
-            adapter.notifyDataSetChanged();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Link l = result.get(position);
+                l.deleteFromRealm();
+            }
+        });
+        // adapter.notifyItemRemoved(position);
+        Toast.makeText(getActivity().getApplicationContext(), "Deleetttt", Toast.LENGTH_SHORT).show();
     }
 }

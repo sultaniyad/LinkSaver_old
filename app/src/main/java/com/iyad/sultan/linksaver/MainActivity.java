@@ -6,21 +6,15 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.iyad.sultan.linksaver.Controller.RecyclerViewAdapter;
 import com.iyad.sultan.linksaver.Fragments.ImportnatLinksFragment;
 import com.iyad.sultan.linksaver.Fragments.LinkFragment;
 import com.iyad.sultan.linksaver.Models.Link;
@@ -28,25 +22,9 @@ import com.iyad.sultan.linksaver.Models.Link;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-
-import io.realm.Realm;
-import io.realm.RealmAsyncTask;
-
-public class MainActivity extends AppCompatActivity implements LinkFragment.OnFragmentInteractionListener, ImportnatLinksFragment.OnFragmentInteractionListener{
-
-    RealmAsyncTask realmAsyncTask;
-    //
+public class MainActivity extends AppCompatActivity implements LinkFragment.OnFragmentInteractionListener, ImportnatLinksFragment.OnFragmentInteractionListener {
 
     //
-    private Toolbar toolbar;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private RecyclerViewAdapter adapter ;
-    //Interface Var
 
 
     @Override
@@ -69,15 +47,17 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
             }
         });*/
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -100,17 +80,22 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
     @Override
     public void onLinkFragmentInteraction(final Link link) {
         //Start new Fragment with data
-        Link l = link;
-        Toast.makeText(this, "Link: " + l.getLink() + " title " + l.getTitle() + " isImpotant "+ l.isImportant(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Link: " + link.getLink() + " title " + link.getTitle() + " isImpotant " + link.isImportant(), Toast.LENGTH_SHORT).show();
 
+    }
 
-
-
-
-
-
-
-
+    @Override
+    public void getSelectedItem(int item, int position) {
+        switch (item) {
+            case R.id.cardview_root:
+                Toast.makeText(this, "Root CardView", Toast.LENGTH_SHORT).show();
+                return;
+            case R.id.is_important_img:
+                Toast.makeText(this, " Is Important" + position, Toast.LENGTH_SHORT).show();
+                return;
+            case R.id.open_link_img:
+                Toast.makeText(this, "Open Link " + position, Toast.LENGTH_SHORT).show();
+        }
     }
 
     //Adapter Fragment
@@ -119,11 +104,9 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
 
-
         public ViewPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
 
 
         @Override
@@ -157,25 +140,10 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
 
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        if(realmAsyncTask != null && !realmAsyncTask.isCancelled())
-            realmAsyncTask.cancel();
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_activity_menu,menu);
+        getMenuInflater().inflate(R.menu.main_activity_menu, menu);
 
-        MenuItem searchItem  = menu.findItem(R.id.action_search);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -201,13 +169,13 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
                 // User chose the "Settings" item, show the app settings UI...
                 Toast.makeText(this, "Add Link", Toast.LENGTH_SHORT).show();
 
-                startActivity(new Intent(getApplicationContext(),AddNewLink.class));
+                startActivity(new Intent(getApplicationContext(), AddNewLink.class));
 
                 return true;
 
 
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+            // User chose the "Favorite" action, mark the current item
+            // as a favorite...
 
 
             default:
@@ -220,13 +188,7 @@ public class MainActivity extends AppCompatActivity implements LinkFragment.OnFr
     }
 
 
-
     //Interface MainActivity and LinkFragment
-
-
-
-
-
 
 
 }
