@@ -1,8 +1,10 @@
 package com.iyad.sultan.linksaver.Fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -158,6 +160,7 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
 
     @Override
     public void onChange(Object element) {
+        adapter.notifyDataSetChanged();
         Toast.makeText(getActivity().getApplicationContext(), "on change called " , Toast.LENGTH_SHORT).show();
     }
 
@@ -191,14 +194,31 @@ public class LinkFragment extends Fragment implements RecyclerViewAdapter.Adapte
 
     void deleteLink(final int position) {
 
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Link l = result.get(position);
-                l.deleteFromRealm();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+ // Add the buttons
+        builder.setMessage(R.string.are_you_sure_want_delete);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Link l = result.get(position);
+                        l.deleteFromRealm();
+                    }
+                });
             }
         });
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
         // adapter.notifyItemRemoved(position);
         Toast.makeText(getActivity().getApplicationContext(), "Deleetttt", Toast.LENGTH_SHORT).show();
-    }
+  }
+
 }
